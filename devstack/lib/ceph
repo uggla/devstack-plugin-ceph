@@ -1007,7 +1007,7 @@ function configure_repo_ceph {
 			repo_file_name="/etc/yum.repos.d/ceph-master.repo"
 			sudo wget -c "https://shaman.ceph.com/api/repos/ceph/master/latest/centos/${package_release}/flavors/default/repo" -O ${repo_file_name}
 			sudo dnf config-manager --add-repo ${repo_file_name}
-		elif [[ "$os_VENDOR" =~ Centos ]] && [[ "$os_RELEASE" =~ 9 ]]; then
+		elif [[ "$os_VENDOR" =~ CentOSStream ]] && [[ "$os_RELEASE" =~ 9 ]]; then
 			dnf_add_repository_ceph_centos_stream "${CEPH_RELEASE}" "${os_RELEASE}-stream"
 		else
 			dnf_add_repository_ceph ${CEPH_RELEASE} ${package_release}
