@@ -958,6 +958,21 @@ EOF
     sudo dnf config-manager --add-repo ceph.repo
 }
 
+function dnf_add_repository_ceph_centos_stream {
+    local ceph_release=$1
+    local package_release=$2
+
+    cat > ceph.repo <<EOF
+[ceph]
+name=Ceph packages for CentOS Stream \$basearch
+baseurl=https://buildlogs.centos.org/centos/$package_release/storage/\$basearch/ceph-$ceph_release/
+gpgcheck=0
+enabled=1
+
+EOF
+    sudo dnf config-manager --add-repo ceph.repo
+}
+
 function dnf_add_repository_nfsganesha {
     local repo=""
 
@@ -993,6 +1008,8 @@ function configure_repo_ceph {
             repo_file_name="/etc/yum.repos.d/ceph-master.repo"
             sudo wget -c "https://shaman.ceph.com/api/repos/ceph/master/latest/centos/${package_release}/flavors/default/repo" -O ${repo_file_name}
             sudo dnf config-manager --add-repo ${repo_file_name}
+        elif [[ "$os_VENDOR" =~ Centos ]] && [[ "$os_RELEASE" =~ 9 ]]; then
+            dnf_add_repository_ceph_centos_stream "${CEPH_RELEASE}" "${os_RELEASE}-stream"
         else
             dnf_add_repository_ceph ${CEPH_RELEASE} ${package_release}
         fi
